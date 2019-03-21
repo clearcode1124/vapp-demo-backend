@@ -1,3 +1,8 @@
 server:
   port: 8700
   context-path: /
+logging:
+  level:
+    com.wade.dingtalk: debug
+    root: error
+#    console: "-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %caller{1} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
