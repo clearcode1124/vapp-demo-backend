@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.dingtalk.api.DefaultDingTalkClient;
@@ -37,6 +38,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthServiceImpl implements AuthService {
 
+  @Value("{$jwt.secret}")
+  private String secret;
+
+  private static final String CLAIM_KEY_USERNAME = "sub";
+  private static final String CLAIM_KEY_CREATED = "created";
+
   @Override
   public Result login(String requestAuthCode) {
     try {
@@ -62,18 +69,16 @@ public class AuthServiceImpl implements AuthService {
       request4UserInfo.setHttpMethod("GET");
       OapiUserGetResponse response4Userinfo = client.execute(request4UserInfo, accessToken);
       Map<String, Object> claims = new HashMap<>();
-      claims.put("unionid", response4Userinfo.getUnionid());
-      claims.put("created", new Date());
+      claims.put(CLAIM_KEY_USERNAME, response4Userinfo.getUnionid());
+      claims.put(CLAIM_KEY_CREATED, new Date());
       String accessToken4Local = Jwts.builder().setClaims(claims)
           .setExpiration(new Date(System.currentTimeMillis() + 60 * 10 * 1000))
-          .signWith(SignatureAlgorithm.HS512,
-              "hvLVNnEQwOvW15DqXqcLPACGt2W+O8QkJbFpIiRyBLHj63BXMiIVHJqpoB4L3gUw5xPOx3MgmmiQ6n8GvRhGGA==")
-          .compact();
+          .signWith(SignatureAlgorithm.HS512, secret).compact();
       ObjectMapper mapper = new ObjectMapper();
       mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
       String json = mapper.writeValueAsString(response4Userinfo);
       User user = mapper.readValue(json, User.class);
-      log.debug("accessToken4Local：{}", accessToken4Local);
+      log.debug("accessToken4Local：{}", user.getUnionid());
       return new TokenResult(accessToken4Local, accessToken4Local, user);
     } catch (ApiException | IOException e) {
       log.error("登录失败：{}", e);

@@ -4,5 +4,14 @@ server:
 logging:
   level:
     com.wade.dingtalk: debug
-    root: error
-#    console: "-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %caller{1} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"
+    root: info
+jwt:
+  header: Authorization
+  secret: hvLVNnEQwOvW15DqXqcLPACGt2W+O8QkJbFpIiRyBLHj63BXMiIVHJqpoB4L3gUw5xPOx3MgmmiQ6n8GvRhGGA==
+  expiration: 604800
+  tokenHead: "Bearer "
+#  route:
+#    authentication:
+#      path: auth
+#      refresh: refresh
+#      register: "auth/register"
