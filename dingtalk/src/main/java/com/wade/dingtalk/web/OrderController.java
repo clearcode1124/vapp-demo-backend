@@ -26,8 +26,9 @@ public class OrderController {
 
   @PostMapping("")
   public HttpEntity<Result> save() {
-    log.debug("currentUnionid: {}", RequestContext.current().getCurrentUnionid());
-    return toResponseEntity(Result.ok());
+    String unionid = RequestContext.current().getCurrentUnionid();
+    log.debug("currentUnionid: {}", unionid);
+    return toResponseEntity(Result.ok(unionid));
   }
 }
 

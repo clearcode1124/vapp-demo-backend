@@ -4,7 +4,13 @@ public class RequestContext {
 
   private String unionid;
 
-  private static ThreadLocal<RequestContext> requestContextHolder = new ThreadLocal<>();
+  private static ThreadLocal<RequestContext> requestContextHolder =
+      new ThreadLocal<RequestContext>() {
+        @Override
+        protected RequestContext initialValue() {
+          return new RequestContext();
+        }
+      };
 
   public static RequestContext current() {
     return requestContextHolder.get();

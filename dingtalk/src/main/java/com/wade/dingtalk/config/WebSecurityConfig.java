@@ -33,19 +33,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     httpSecurity
         // 由于使用的是JWT，我们这里不需要csrf
         .csrf().disable()
-
         // 基于token，所以不需要session
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
         .authorizeRequests()
-        .anyRequest().permitAll();
         // 对于获取token的rest api要允许匿名访问
-//        .antMatchers("/api/v1/auth/**").permitAll()
-//        // 除上面外的所有请求全部需要鉴权认证
-//        .anyRequest().authenticated();
+        .antMatchers("/api/v1/auth/**").permitAll()
+        // 除上面外的所有请求全部需要鉴权认证
+        .mvcMatchers("/api/v1/**").access("@permissionSecurity.check()");
     httpSecurity.addFilterBefore(authenticationTokenFilterBean(),
         UsernamePasswordAuthenticationFilter.class);
-
     // 禁用缓存
     httpSecurity.headers().cacheControl();
   }
