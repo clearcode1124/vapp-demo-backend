@@ -11,6 +11,8 @@ import com.wade.dingtalk.domain.Result;
 
 public interface AuthService {
 
+  String getSign();
+  
   Result login(String requestAuthCode);
 }
 
